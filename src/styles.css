@@ -1,0 +1,257 @@
+/* Minimal, calm UI. System fonts, restrained palette, generous whitespace. */
+
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --ink: #1c1917;
+  --muted: #78716c;
+  --line: #e7e5e4;
+  --accent: #1c1917;
+  --radius: 10px;
+  --max: 920px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1917;
+    --surface: #292524;
+    --ink: #f5f5f4;
+    --muted: #a8a29e;
+    --line: #44403c;
+    --accent: #f5f5f4;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; }
+
+/* --- App bar / tabs ------------------------------------------------------ */
+
+.appbar {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px 20px 8px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.brand {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.tabbar { display: flex; gap: 4px; }
+
+.tab {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: background 0.12s, color 0.12s;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { background: var(--accent); color: var(--bg); }
+
+.content {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 12px 20px 64px;
+}
+
+/* --- Nav (date / year stepper) ------------------------------------------ */
+
+.nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0 16px; }
+
+.nav-btn {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 5px 12px;
+  line-height: 1;
+}
+.nav-btn:hover { border-color: var(--muted); }
+.nav-btn.today { font-size: 13px; }
+.nav-label { color: var(--muted); margin-left: 6px; font-variant-numeric: tabular-nums; }
+
+/* --- Planner sub-tabs ---------------------------------------------------- */
+
+.subtabs { display: flex; gap: 4px; }
+.subtab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  border-radius: var(--radius);
+  padding: 5px 14px;
+}
+.subtab:hover { color: var(--ink); }
+.subtab.active { background: var(--surface); border-color: var(--line); color: var(--ink); }
+
+/* --- Tasks --------------------------------------------------------------- */
+
+.task-add, .task-edit {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  outline: none;
+}
+.task-add:focus, .task-edit:focus { border-color: var(--muted); }
+
+.task-list { list-style: none; margin: 10px 0; padding: 0; }
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.task:last-child { border-bottom: none; }
+
+.task-check { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.task-text { flex: 1; }
+.task-text.done { color: var(--muted); text-decoration: line-through; }
+.task-edit { padding: 4px 8px; }
+
+.task-del {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.task:hover .task-del { opacity: 1; }
+.task-del:hover { color: #ef4444; }
+
+/* --- Week view ----------------------------------------------------------- */
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.week-col {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+.week-day-head { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.week-day-head.is-today { color: var(--ink); }
+.week-col .task-list { margin: 4px 0; flex: 1; }
+.week-col .task { font-size: 13px; padding: 3px 0; }
+.week-col .task-add { font-size: 12px; padding: 5px 8px; }
+
+@media (max-width: 720px) {
+  .week-grid { grid-template-columns: 1fr; }
+  .week-col { min-height: auto; }
+}
+
+/* --- Month view ---------------------------------------------------------- */
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.month-dow { text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 2px; }
+.month-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 6px;
+  color: var(--ink);
+}
+.month-cell:hover { border-color: var(--muted); }
+.month-cell.other-month { opacity: 0.4; }
+.month-cell.is-today { border-color: var(--accent); border-width: 2px; }
+.month-cell-num { font-size: 13px; font-variant-numeric: tabular-nums; }
+.month-cell-dot {
+  align-self: flex-end;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.month-cell-dot.open { background: var(--accent); color: var(--bg); }
+
+/* --- Notes --------------------------------------------------------------- */
+
+.note-block { margin-top: 20px; }
+.note-label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+.note {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  resize: vertical;
+  outline: none;
+}
+.note:focus { border-color: var(--muted); }
+
+/* --- Mood tracker -------------------------------------------------------- */
+
+.mood-header { margin-bottom: 12px; }
+.hint { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.legend-swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+@media (max-width: 720px) { .mood-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 420px) { .mood-grid { grid-template-columns: 1fr; } }
+
+.mood-month-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.mood-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.mood-box {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+  padding: 0;
+}
+.mood-box:hover:not(.blank) { outline: 1px solid var(--muted); }
+.mood-box.blank { border: none; background: transparent; pointer-events: none; }
+.mood-box.is-today { box-shadow: inset 0 0 0 2px var(--accent); }
