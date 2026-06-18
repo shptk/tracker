@@ -25,10 +25,21 @@ Node is via nvm (v22). Run `nvm use` / source nvm first if `node` isn't found.
 
 ## Deploy
 
-GitHub Pages **project site** at `https://shptk.github.io/todo-tracker/`.
-`vite.config.ts` sets `base: "/todo-tracker/"` for builds. CI in
-`.github/workflows/deploy.yml` builds and deploys on push to `main`.
-Enable Pages → Source: "GitHub Actions" in repo settings once.
+**Cloudflare Pages** from the private GitHub repo `shptk/todo-tracker`, served
+at the custom subdomain **`https://tracker.shashwat.de/`**.
+
+- Repo is **private** — GitHub Pages on the free plan can't publish private
+  repos, so Cloudflare Pages (free, supports private repos + custom domains +
+  auto HTTPS) is the host. There is intentionally no GitHub Actions deploy
+  workflow.
+- Cloudflare build settings: **build command** `npm run build`, **output dir**
+  `dist`, framework preset "None"/Vite. Node version pinned by `.node-version`
+  (22).
+- `vite.config.ts` sets `base: "/"` (root of the subdomain). If the host or
+  path ever changes, update `base` accordingly.
+- Custom domain: add `tracker.shashwat.de` in the Cloudflare Pages project →
+  Custom domains; DNS is a CNAME to the `*.pages.dev` target (automatic if the
+  zone is on Cloudflare).
 
 ## PWA
 

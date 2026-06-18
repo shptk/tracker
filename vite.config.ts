@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
-// Deployed as a GitHub Pages project site at shptk.github.io/todo-tracker,
-// so assets must be served from the /todo-tracker/ sub-path in production.
-// In dev (vite serve) base stays "/".
-export default defineConfig(({ command }) => ({
-  base: command === "build" ? "/todo-tracker/" : "/",
+// Served at the root of a custom subdomain (tracker.shashwat.de) via
+// Cloudflare Pages, so the base path is "/". (Was "/todo-tracker/" when
+// targeting the shptk.github.io/todo-tracker project-site sub-path.)
+export default defineConfig({
+  base: "/",
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
@@ -39,4 +39,4 @@ export default defineConfig(({ command }) => ({
       devOptions: { enabled: true, type: "module" },
     }),
   ],
-}));
+});
