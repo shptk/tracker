@@ -1,12 +1,27 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { writeFileSync } from "node:fs";
 
-// Served at the root of a custom subdomain (tracker.shashwat.de) via
-// Cloudflare Pages, so the base path is "/". (Was "/todo-tracker/" when
-// targeting the shptk.github.io/todo-tracker project-site sub-path.)
+// Served at tools.pathak.uk/tracker via GitHub Pages: the repo's custom domain
+// is tools.pathak.uk, and the app is built into the /tracker/ subpath (base
+// "/tracker/", output to dist/tracker). A generated dist/index.html redirects
+// the bare domain root to /tracker/.
 export default defineConfig({
-  base: "/",
+  base: "/tracker/",
+  build: { outDir: "dist/tracker" },
   plugins: [
+    {
+      // Emit a root redirect so https://tools.pathak.uk/ → /tracker/.
+      name: "tracker-root-redirect",
+      closeBundle() {
+        writeFileSync(
+          "dist/index.html",
+          '<!doctype html><meta charset="utf-8"><title>tracker</title>' +
+            '<meta http-equiv="refresh" content="0; url=/tracker/">' +
+            '<a href="/tracker/">tracker</a>',
+        );
+      },
+    },
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: "auto",

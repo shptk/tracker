@@ -27,18 +27,26 @@ Node is via nvm (v22). Run `nvm use` / source nvm first if `node` isn't found.
 
 ## Deploy
 
-**GitHub Pages** from the public repo `shptk/todo-tracker`, served at the
-custom subdomain **`https://tracker.shashwat.de/`**.
+**GitHub Pages** from the public repo `shptk/todo-tracker`, served at
+**`https://tools.pathak.uk/tracker`**.
 
 - Repo is **public** (MIT licensed), so free GitHub Pages applies.
 - CI in `.github/workflows/deploy.yml` builds on push to `main` and deploys via
-  the Pages Actions flow (Node pinned by `.node-version`). One-time: repo
-  Settings → Pages → Source = "GitHub Actions".
-- `public/CNAME` holds `tracker.shashwat.de` so it ships in `dist/` — that sets
-  the custom domain. DNS: a `CNAME` record `tracker` → `shptk.github.io`.
-  HTTPS provisions automatically.
-- `vite.config.ts` sets `base: "/"` (the site is served at the subdomain root).
-  If the host/path ever changes, update `base` accordingly.
+  the Pages Actions flow (Node pinned by `.node-version`).
+- The repo's Pages **custom domain is `tools.pathak.uk`**, set via the Pages API
+  (for Actions deploys the domain comes from repo settings, not a CNAME file —
+  there is intentionally no `public/CNAME`). DNS: a `CNAME` record `tools` →
+  `shptk.github.io`. HTTPS provisions automatically.
+- The app is built into the **`/tracker/` subpath**: `vite.config.ts` sets
+  `base: "/tracker/"` and `build.outDir: "dist/tracker"`, and a small plugin
+  emits `dist/index.html` redirecting the bare domain root to `/tracker/`. So
+  the artifact root (`tools.pathak.uk/`) redirects and the app lives at
+  `tools.pathak.uk/tracker/`. Dev/preview also serve under `/tracker/`.
+- This binds the `tools.pathak.uk` subdomain to this one repo; hosting other
+  tools at `tools.pathak.uk/<x>` later would need a dedicated GitHub org whose
+  `*.github.io` carries the `tools.pathak.uk` umbrella.
+- Google OAuth: add `https://tools.pathak.uk` to the client's Authorized
+  JavaScript origins so sign-in works on the deployed site.
 
 ## PWA
 
